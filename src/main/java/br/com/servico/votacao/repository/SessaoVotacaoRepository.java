@@ -11,7 +11,7 @@ import java.util.List;
 public interface SessaoVotacaoRepository extends JpaRepository<SessaoVotacao, Integer> {
 
 
-    @Query("select s.oid, s.ativa, s.dataHoraInicio, s.dataHoraFim from SessaoVotacao s where s.ativa:=true")
+    @Query("select s.oid, s.ativa, s.dataHoraInicio, s.dataHoraFim from SessaoVotacao s where s.ativa=:true")
     List<SessaoVotacao> buscarTodasSessoesEmAndamento();
 
 }

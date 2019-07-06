@@ -23,7 +23,7 @@ public class Pauta {
     private Integer oid;
 
     @NotNull
-    @Column(name = "descricao", length = 100)
+    @Column(name = "descricao", length = 100, nullable = false)
     private String descricao;
 
 }

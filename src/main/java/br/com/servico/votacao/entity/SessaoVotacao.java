@@ -26,8 +26,6 @@ public class SessaoVotacao {
 
     private LocalDateTime dataHoraFim;
 
-    private Integer tempo;
-
     private Boolean ativa;
 
     @NotNull

@@ -1,5 +1,6 @@
 package br.com.servico.votacao.service;
 
+import br.com.servico.votacao.dto.PautaDTO;
 import br.com.servico.votacao.dto.VotacaoDTO;
 import br.com.servico.votacao.entity.Votacao;
 import br.com.servico.votacao.repository.VotacaoRepository;
@@ -29,13 +30,16 @@ public class VotacaoService {
         return null;
     }
 
+
     public void votar() {
 
     }
 
-    public boolean isSessaoValida() {
-
+    public VotacaoDTO iniciarVotacao(PautaDTO dto) {
+        return salvarVotacao(new VotacaoDTO(null, dto));
     }
 
-    
+    private VotacaoDTO salvarVotacao(VotacaoDTO dto) {
+        return VotacaoDTO.toDTO(repository.save(VotacaoDTO.toEntity(dto)));
+    }
 }

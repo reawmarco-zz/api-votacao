@@ -1,4 +1,4 @@
-package br.com.servico.votacao.unitarios;
+package br.com.servico.votacao.testes;
 
 import org.junit.Test;
 
