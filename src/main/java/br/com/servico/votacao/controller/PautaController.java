@@ -28,7 +28,7 @@ public class PautaController {
 
     @PostMapping
     public ResponseEntity<?> salvarPauta(@Valid @RequestBody PautaDTO dto) {
-        LOGGER.info("Salvando a pauta {titulo}", dto.getTitulo());
+        LOGGER.info("Salvando a pauta {descricao}", dto.getDescricao());
         dto = service.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 @Entity
-@Table(name = "pauta")
+@Table(name = "tbl_pauta")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pauta {
@@ -23,11 +23,7 @@ public class Pauta {
     private Integer oid;
 
     @NotNull
-    @Column(name = "titulo", length = 100)
-    private String titulo;
-
-    @NotNull
-    @Column(name = "descricao", length = 500)
+    @Column(name = "descricao", length = 100)
     private String descricao;
 
 }

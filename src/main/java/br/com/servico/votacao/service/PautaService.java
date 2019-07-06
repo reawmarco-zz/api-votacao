@@ -18,7 +18,6 @@ public class PautaService {
         this.repository = repository;
     }
 
-
     public PautaDTO salvar(PautaDTO dto) {
         return PautaDTO.toDTO(repository.save(PautaDTO.toEntity(dto)));
     }

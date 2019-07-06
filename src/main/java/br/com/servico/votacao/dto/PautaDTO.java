@@ -13,13 +13,11 @@ import lombok.NoArgsConstructor;
 public class PautaDTO {
 
     private Integer oid;
-    private String titulo;
     private String descricao;
 
     public static final Pauta toEntity(PautaDTO dto) {
         return Pauta.builder()
                 .oid(dto.getOid())
-                .titulo(dto.getTitulo())
                 .descricao(dto.getDescricao())
                 .build();
     }
@@ -27,7 +25,6 @@ public class PautaDTO {
     public static final PautaDTO toDTO(Pauta pauta) {
         return PautaDTO.builder()
                 .oid(pauta.getOid())
-                .titulo(pauta.getTitulo())
                 .descricao(pauta.getDescricao())
                 .build();
     }
