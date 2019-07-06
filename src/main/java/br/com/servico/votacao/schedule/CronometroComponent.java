@@ -22,11 +22,11 @@ public class CronometroComponent {
 
     @Scheduled(cron = "15 * * * * *")
     private void teste() {
-        LOGGER.info("Contador de tempo sendo excutado...");
+        LOGGER.debug("Contador de tempo sendo excutado...");
         List<SessaoVotacaoAndamentoDTO> list = sessaoVotacaoService.buscarSessaoesEmAndamento();
-        LOGGER.info("Quantidade de sessoes abertas  = {}", list.size());
+        LOGGER.debug("Quantidade de sessoes abertas  = {}", list.size());
         list.forEach(dto -> {
-            LOGGER.info("Sessao encerrada {}", dto.getOid());
+            LOGGER.debug("Sessao encerrada {}", dto.getOid());
             if (dto.getAtiva()) {
                 sessaoVotacaoService.encerraoSessaoVotacao(dto);
             }

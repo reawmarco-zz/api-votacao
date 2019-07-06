@@ -18,6 +18,7 @@ public class PautaTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
     @Autowired
     private PautaRepository repository;
 

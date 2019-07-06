@@ -1,8 +1,10 @@
 package br.com.servico.votacao.exception;
 
-import org.springframework.web.client.RestClientException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class NotFoundException extends RestClientException {
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class NotFoundException extends RuntimeException {
 
     public NotFoundException(String mensagem) {
         super(mensagem);

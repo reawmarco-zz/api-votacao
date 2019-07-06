@@ -23,13 +23,13 @@ public class AssociadoService {
 
     @Transactional(readOnly = true)
     public Boolean isValidaParticipacaoAssociadoVotacao(Integer oidAssociado, Integer oidPauta) {
-        LOGGER.info("Validando participacao do associado na votacao da pauta  oid = {}", oidPauta);
+        LOGGER.debug("Validando participacao do associado na votacao da pauta  oid = {}", oidPauta);
         return repository.existsByOidAssociadoAndOidPauta(oidAssociado, oidPauta);
     }
 
     @Transactional
     public AssociadoDTO salvarAssociado(AssociadoDTO dto) {
-        LOGGER.info("Registrando participacao do associado na votacao oidAssociado = {}, oidPauta = {}", dto.getOidAssociado(), dto.getOidPauta());
+        LOGGER.debug("Registrando participacao do associado na votacao oidAssociado = {}, oidPauta = {}", dto.getOidAssociado(), dto.getOidPauta());
         return AssociadoDTO.toDTO(repository.save(AssociadoDTO.toEntity(dto)));
     }
 }

@@ -2,7 +2,10 @@ package br.com.servico.votacao.service;
 
 import br.com.servico.votacao.dto.PautaDTO;
 import br.com.servico.votacao.entity.Pauta;
+import br.com.servico.votacao.exception.NotFoundException;
 import br.com.servico.votacao.repository.PautaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +14,8 @@ import java.util.Optional;
 
 @Service
 public class PautaService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PautaService.class);
 
     private final PautaRepository repository;
 
@@ -26,12 +31,14 @@ public class PautaService {
 
     @Transactional(readOnly = true)
     public PautaDTO buscarPautaPeloOID(Integer oid) {
-        Pauta pauta = repository.getOne(oid);
+        Optional<Pauta> pautaOptional = repository.findById(oid);
 
-        if (Optional.ofNullable(pauta).isPresent()) {
-            return PautaDTO.toDTO(pauta);
+        if (!pautaOptional.isPresent()) {
+            LOGGER.error("Pauta não localizada para oid" + oid);
+            throw new NotFoundException("Pauta não localizada para o oid " + oid);
         }
-        return null;
+
+        return PautaDTO.toDTO(pautaOptional.get());
     }
 
     @Transactional(readOnly = true)

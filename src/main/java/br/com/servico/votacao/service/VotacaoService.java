@@ -1,6 +1,9 @@
 package br.com.servico.votacao.service;
 
 import br.com.servico.votacao.dto.*;
+import br.com.servico.votacao.exception.NotFoundException;
+import br.com.servico.votacao.exception.SessoEncerradaException;
+import br.com.servico.votacao.exception.VotoInvalidoException;
 import br.com.servico.votacao.repository.VotacaoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,23 +31,28 @@ public class VotacaoService {
 
     @Transactional(readOnly = true)
     public Boolean isValidaVoto(VotarDTO dto) {
-        LOGGER.info("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
+        LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
 
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
-
+            LOGGER.error("Pauta nao localizada para votacao oidPauta {}", dto.getAssociado());
+            throw new NotFoundException("Pauta não localizada oid " + dto.getOidPauta());
 
         } else if (!sessaoVotacaoService.isSessaoVotacaoValida(dto.getOidSessaoVotacao())) {
+            LOGGER.error("Tentativa de voto para sessao encerrada oidSessaoVotacao {}", dto.getOidSessaoVotacao());
+            throw new SessoEncerradaException("Sessão de votação já encerrada");
 
         } else if (!associadoService.isValidaParticipacaoAssociadoVotacao(dto.getAssociado(), dto.getOidPauta())) {
-
+            LOGGER.error("Associado tentou votar mais de 1 vez oidAssociado {}", dto.getAssociado());
+            throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
         }
+
         return Boolean.TRUE;
     }
 
     @Transactional
     public VotacaoDTO votar(VotarDTO dto) {
         if (isValidaVoto(dto)) {
-            LOGGER.info("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
+            LOGGER.debug("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
 
             VotacaoDTO votacaoDTO = new VotacaoDTO(null,
                     dto.getOidPauta(),
@@ -70,14 +78,14 @@ public class VotacaoService {
 
     @Transactional
     public VotacaoDTO registrarVoto(VotacaoDTO dto) {
-        LOGGER.info("Salvando o voto");
+        LOGGER.debug("Salvando o voto para oidPauta {}", dto.getOidPauta());
         return VotacaoDTO.toDTO(repository.save(VotacaoDTO.toEntity(dto)));
     }
 
 
     @Transactional(readOnly = true)
     public VotacaoDTO buscarResultadoVotacao(Integer oidPauta, Integer oidSessaoVotacao) {
-        LOGGER.info("Contabilizando os votos para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
+        LOGGER.debug("Contabilizando os votos para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
         VotacaoDTO dto = new VotacaoDTO();
 
         dto.setOidPauta(oidPauta);
@@ -91,7 +99,7 @@ public class VotacaoService {
 
     @Transactional(readOnly = true)
     public ResultadoDTO buscarDadosResultadoVotacao(Integer oidPauta, Integer oidSessaoVotacao) {
-        LOGGER.info("Construindo o objeto de retorno do resultado para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
+        LOGGER.debug("Construindo o objeto de retorno do resultado para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
         PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(oidPauta);
         VotacaoDTO votacaoDTO = buscarResultadoVotacao(oidPauta, oidSessaoVotacao);
         return new ResultadoDTO(pautaDTO, votacaoDTO);

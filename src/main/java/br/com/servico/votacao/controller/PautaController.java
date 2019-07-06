@@ -27,15 +27,14 @@ public class PautaController {
 
     @PostMapping
     public ResponseEntity<?> salvarPauta(@Valid @RequestBody PautaDTO dto) {
-        LOGGER.info("Salvando a pauta  = {}", dto.getDescricao());
+        LOGGER.debug("Salvando a pauta  = {}", dto.getDescricao());
         dto = service.salvar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping(value = "/{oid}")
     public ResponseEntity<?> buscarPautaPeloOID(@PathVariable("oid") Integer oid) {
-        LOGGER.info("Buscando a pauta pelo OID = {}", oid);
-        PautaDTO pautaDTO = service.buscarPautaPeloOID(oid);
-        return ResponseEntity.ok(pautaDTO);
+        LOGGER.debug("Buscando a pauta pelo OID = {}", oid);
+        return ResponseEntity.ok(service.buscarPautaPeloOID(oid));
     }
 }

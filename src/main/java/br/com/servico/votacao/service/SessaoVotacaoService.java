@@ -4,6 +4,7 @@ import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoAndamentoDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.entity.SessaoVotacao;
+import br.com.servico.votacao.exception.NotFoundException;
 import br.com.servico.votacao.repository.SessaoVotacaoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,28 +24,38 @@ public class SessaoVotacaoService {
     private static final Integer TEMPO_DEFAULT = 1;
 
     private final SessaoVotacaoRepository repository;
+    private final PautaService pautaService;
 
 
     @Autowired
-    public SessaoVotacaoService(SessaoVotacaoRepository repository) {
+    public SessaoVotacaoService(SessaoVotacaoRepository repository, PautaService pautaService) {
         this.repository = repository;
+        this.pautaService = pautaService;
     }
 
     @Transactional
     public SessaoVotacaoDTO abrirSessaoVotacao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
-        LOGGER.info("Abrindo a sessao de votacao para a pauta {}", sessaoVotacaoAbrirDTO.getOidPauta());
+        LOGGER.debug("Abrindo a sessao de votacao para a pauta {}", sessaoVotacaoAbrirDTO.getOidPauta());
+
+        isValidaAbrirSessao(sessaoVotacaoAbrirDTO);
 
         SessaoVotacaoDTO dto = new SessaoVotacaoDTO(
                 null,
                 LocalDateTime.now(),
                 calcularTempo(sessaoVotacaoAbrirDTO.getTempo()),
                 Boolean.TRUE);
+
         return salvar(dto);
     }
 
     @Transactional(readOnly = true)
+    public void isValidaAbrirSessao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
+        pautaService.isPautaValida(sessaoVotacaoAbrirDTO.getOidPauta());
+    }
+
+    @Transactional(readOnly = true)
     public List<SessaoVotacaoAndamentoDTO> buscarSessaoesEmAndamento() {
-        LOGGER.info("Buscando sessoes em andamento");
+        LOGGER.debug("Buscando sessoes em andamento");
         List<SessaoVotacaoAndamentoDTO> list = repository.buscarTodasSessoesEmAndamento(Boolean.TRUE)
                 .stream()
                 .map(SessaoVotacaoAndamentoDTO::toDTOAndamento)
@@ -58,18 +69,19 @@ public class SessaoVotacaoService {
 
     @Transactional
     public void encerraoSessaoVotacao(SessaoVotacaoAndamentoDTO dto) {
-        LOGGER.info("Encerrando sessao com tempo de duracao expirado {}", dto.getOid());
+        LOGGER.debug("Encerrando sessao com tempo de duracao expirado {}", dto.getOid());
         dto.setAtiva(Boolean.FALSE);
         salvar(buscarSessaoVotacaoPeloOID(dto.getOid()));
     }
 
     @Transactional(readOnly = true)
     public SessaoVotacaoDTO buscarSessaoVotacaoPeloOID(Integer oid) {
-        SessaoVotacao sessaoVotacao = repository.getOne(oid);
-        if (Optional.ofNullable(sessaoVotacao).isPresent()) {
-            return SessaoVotacaoDTO.toDTO(sessaoVotacao);
+        Optional<SessaoVotacao> optionalSessaoVotacao = repository.findById(oid);
+        if (!optionalSessaoVotacao.isPresent()) {
+            LOGGER.error("Sessao de votacao nao localizada para o oid " + oid);
+            throw new NotFoundException("Sessão de votação não localizada para o oid " + oid);
         }
-        return null;
+        return SessaoVotacaoDTO.toDTO(optionalSessaoVotacao.get());
     }
 
     @Transactional(readOnly = true)
@@ -87,7 +99,7 @@ public class SessaoVotacaoService {
 
     @Transactional
     public SessaoVotacaoDTO salvar(SessaoVotacaoDTO dto) {
-        LOGGER.info("Salvando a sessao de votacao");
+        LOGGER.debug("Salvando a sessao de votacao");
         if (Optional.ofNullable(dto).isPresent()) {
             return SessaoVotacaoDTO.toDTO(repository.save(SessaoVotacaoDTO.toEntity(dto)));
         }

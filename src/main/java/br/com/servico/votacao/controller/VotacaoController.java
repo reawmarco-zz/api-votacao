@@ -27,15 +27,15 @@ public class VotacaoController {
 
     @PostMapping(value = "/votar")
     public ResponseEntity<?> votar(@Valid @RequestBody VotarDTO dto) {
-        LOGGER.info("Associado votando associado = {}", dto.getAssociado());
+        LOGGER.debug("Associado votando associado = {}", dto.getAssociado());
         service.votar(dto);
-        LOGGER.info("Voto associado finalizado associado = {}", dto.getAssociado());
+        LOGGER.debug("Voto associado finalizado associado = {}", dto.getAssociado());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping(value = "/resultado/{oidPauta}/{oidSessaoVotacao}")
     public ResponseEntity<?> resultadoVotacao(@PathVariable("oidPauta") Integer oidPauta, @PathVariable("oidSessaoVotacao") Integer oidSessaoVotacao) {
-        LOGGER.info("Buscando resultado da votacao oidPauta = {} , oidSessaoVotacao = {} ", oidPauta, oidSessaoVotacao);
+        LOGGER.debug("Buscando resultado da votacao oidPauta = {} , oidSessaoVotacao = {} ", oidPauta, oidSessaoVotacao);
         ResultadoDTO dto = service.buscarDadosResultadoVotacao(oidPauta, oidSessaoVotacao);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
