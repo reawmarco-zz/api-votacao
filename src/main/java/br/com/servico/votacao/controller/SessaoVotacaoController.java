@@ -31,9 +31,9 @@ public class SessaoVotacaoController {
 
     @PostMapping(value = "/abrir-sessao")
     public ResponseEntity<?> abrirSessaoVotacao(@Valid @RequestBody SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
-        LOGGER.info("Abrindo a sessao para votacao");
+        LOGGER.info("Abrindo a sessao para votacao da pauta  oid = {}", sessaoVotacaoAbrirDTO.getOidPauta());
         SessaoVotacaoDTO dto = service.abrirSessaoVotacao(sessaoVotacaoAbrirDTO);
-        LOGGER.info("Sessao para votacao da pauta {} aberta", dto.getVotacaoDTO().getPautaDTO().getOid());
+        LOGGER.info("Sessao para votacao da pauta  oid = {} aberta", sessaoVotacaoAbrirDTO.getOidPauta());
         LOGGER.info("Hora de inicio sessao para votacao {}", dto.getDataHoraInicio());
         LOGGER.info("Hora de encerramento sessao para votacao {}", dto.getDataHoraFim());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);

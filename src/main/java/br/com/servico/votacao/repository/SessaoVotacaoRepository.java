@@ -14,4 +14,5 @@ public interface SessaoVotacaoRepository extends JpaRepository<SessaoVotacao, In
     @Query("select s from SessaoVotacao s where s.ativa=:ativo")
     List<SessaoVotacao> buscarTodasSessoesEmAndamento(Boolean ativo);
 
+    Boolean existsByOidAndAndAtiva(Integer oid, Boolean ativa);
 }

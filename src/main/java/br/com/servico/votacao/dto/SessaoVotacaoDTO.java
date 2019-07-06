@@ -16,7 +16,6 @@ public class SessaoVotacaoDTO {
 
 
     private Integer oid;
-    private VotacaoDTO votacaoDTO;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
     private Boolean ativa;
@@ -25,7 +24,6 @@ public class SessaoVotacaoDTO {
     public static final SessaoVotacao toEntity(SessaoVotacaoDTO dto) {
         return SessaoVotacao.builder()
                 .oid(dto.getOid())
-                .votacao(VotacaoDTO.toEntity(dto.getVotacaoDTO()))
                 .dataHoraInicio(dto.getDataHoraInicio())
                 .dataHoraFim(dto.getDataHoraFim())
                 .ativa(dto.getAtiva())
@@ -35,7 +33,6 @@ public class SessaoVotacaoDTO {
     public static final SessaoVotacaoDTO toDTO(SessaoVotacao sessaoVotacao) {
         return SessaoVotacaoDTO.builder()
                 .oid(sessaoVotacao.getOid())
-                .votacaoDTO(VotacaoDTO.toDTO(sessaoVotacao.getVotacao()))
                 .dataHoraInicio(sessaoVotacao.getDataHoraInicio())
                 .dataHoraFim(sessaoVotacao.getDataHoraFim())
                 .ativa(sessaoVotacao.getAtiva())

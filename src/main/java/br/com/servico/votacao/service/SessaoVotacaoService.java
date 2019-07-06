@@ -1,12 +1,15 @@
 package br.com.servico.votacao.service;
 
-import br.com.servico.votacao.dto.*;
+import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
+import br.com.servico.votacao.dto.SessaoVotacaoAndamentoDTO;
+import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.entity.SessaoVotacao;
 import br.com.servico.votacao.repository.SessaoVotacaoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,32 +23,26 @@ public class SessaoVotacaoService {
     private static final Integer TEMPO_DEFAULT = 1;
 
     private final SessaoVotacaoRepository repository;
-    private final VotacaoService votacaoService;
-    private final PautaService pautaService;
+
 
     @Autowired
-    public SessaoVotacaoService(SessaoVotacaoRepository repository, VotacaoService votacaoService, PautaService pautaService) {
+    public SessaoVotacaoService(SessaoVotacaoRepository repository) {
         this.repository = repository;
-        this.votacaoService = votacaoService;
-        this.pautaService = pautaService;
     }
 
-
+    @Transactional
     public SessaoVotacaoDTO abrirSessaoVotacao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
-        LOGGER.info("Abrir sessao de votacao para a pauta {}", sessaoVotacaoAbrirDTO.getOidPauta());
-
-        PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(sessaoVotacaoAbrirDTO.getOidPauta());
-        VotacaoDTO votacaoDTO = votacaoService.iniciarVotacao(pautaDTO);
+        LOGGER.info("Abrindo a sessao de votacao para a pauta {}", sessaoVotacaoAbrirDTO.getOidPauta());
 
         SessaoVotacaoDTO dto = new SessaoVotacaoDTO(
                 null,
-                votacaoDTO,
                 LocalDateTime.now(),
                 calcularTempo(sessaoVotacaoAbrirDTO.getTempo()),
                 Boolean.TRUE);
         return salvar(dto);
     }
 
+    @Transactional(readOnly = true)
     public List<SessaoVotacaoAndamentoDTO> buscarSessaoesEmAndamento() {
         LOGGER.info("Buscando sessoes em andamento");
         List<SessaoVotacaoAndamentoDTO> list = repository.buscarTodasSessoesEmAndamento(Boolean.TRUE)
@@ -59,18 +56,25 @@ public class SessaoVotacaoService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void encerraoSessaoVotacao(SessaoVotacaoAndamentoDTO dto) {
         LOGGER.info("Encerrando sessao com tempo de duracao expirado {}", dto.getOid());
         dto.setAtiva(Boolean.FALSE);
         salvar(buscarSessaoVotacaoPeloOID(dto.getOid()));
     }
 
-    private SessaoVotacaoDTO buscarSessaoVotacaoPeloOID(Integer oid) {
+    @Transactional(readOnly = true)
+    public SessaoVotacaoDTO buscarSessaoVotacaoPeloOID(Integer oid) {
         SessaoVotacao sessaoVotacao = repository.getOne(oid);
         if (Optional.ofNullable(sessaoVotacao).isPresent()) {
             return SessaoVotacaoDTO.toDTO(sessaoVotacao);
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isSessaoVotacaoValida(Integer oid) {
+        return repository.existsByOidAndAndAtiva(oid, Boolean.TRUE);
     }
 
     private LocalDateTime calcularTempo(Integer tempo) {
@@ -81,8 +85,9 @@ public class SessaoVotacaoService {
         }
     }
 
-    private SessaoVotacaoDTO salvar(SessaoVotacaoDTO dto) {
-        LOGGER.info("salvar sessao de votacao para a pauta {}", dto.getVotacaoDTO().getPautaDTO().getOid());
+    @Transactional
+    public SessaoVotacaoDTO salvar(SessaoVotacaoDTO dto) {
+        LOGGER.info("Salvando a sessao de votacao");
         if (Optional.ofNullable(dto).isPresent()) {
             return SessaoVotacaoDTO.toDTO(repository.save(SessaoVotacaoDTO.toEntity(dto)));
         }

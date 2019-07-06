@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PautaRepository extends JpaRepository<Pauta, Integer> {
+
+    Boolean existsByOid(Integer oid);
 }

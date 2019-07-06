@@ -6,29 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 @Entity
-@Table(name = "tbl_votacao")
+@Table(name = "tbl_associado")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Votacao {
+public class Associado {
 
     @Id
     @Column(name = "oid")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer oid;
 
-    @Column(name = "voto")
-    private Boolean voto;
+    @Column(name = "oid_associado")
+    private Integer oidAssociado;
 
-    @NotNull
     @Column(name = "oid_pauta")
     private Integer oidPauta;
-
-    @NotNull
-    @Column(name = "oid_sessao_votacao")
-    private Integer oidSessaoVotacao;
 }

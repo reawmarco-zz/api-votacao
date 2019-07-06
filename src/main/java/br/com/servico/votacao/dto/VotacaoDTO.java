@@ -13,19 +13,25 @@ import lombok.NoArgsConstructor;
 public class VotacaoDTO {
 
     private Integer oid;
-    private PautaDTO pautaDTO;
+    private Integer oidPauta;
+    private Integer oidSessaoVotacao;
+    private Boolean voto;
 
     public static final Votacao toEntity(VotacaoDTO dto) {
         return Votacao.builder()
                 .oid(dto.getOid())
-                .pauta(PautaDTO.toEntity(dto.getPautaDTO()))
+                .oidPauta(dto.getOidPauta())
+                .oidSessaoVotacao(dto.getOidSessaoVotacao())
+                .voto(dto.getVoto())
                 .build();
     }
 
     public static final VotacaoDTO toDTO(Votacao votacao) {
         return VotacaoDTO.builder()
                 .oid(votacao.getOid())
-                .pautaDTO(PautaDTO.toDTO(votacao.getPauta()))
+                .voto(votacao.getVoto())
+                .oidSessaoVotacao(votacao.getOidSessaoVotacao())
+                .oidPauta(votacao.getOidPauta())
                 .build();
     }
 }

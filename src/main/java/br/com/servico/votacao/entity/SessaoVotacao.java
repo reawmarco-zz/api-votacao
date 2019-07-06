@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,9 +30,5 @@ public class SessaoVotacao {
     @Column(name = "status")
     private Boolean ativa;
 
-    @NotNull
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "oid_votacao", referencedColumnName = "oid", nullable = false)
-    private Votacao votacao;
 
 }
