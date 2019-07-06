@@ -1,5 +1,6 @@
 package br.com.servico.votacao.dto;
 
+import br.com.servico.votacao.entity.SessaoVotacao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,15 +17,14 @@ public class SessaoVotacaoAndamentoDTO {
     private Integer oid;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
-    private Integer tempo;
     private Boolean ativa;
 
-    public static final SessaoVotacaoAndamentoDTO toDTOAndamento(SessaoVotacaoDTO dto) {
+    public static final SessaoVotacaoAndamentoDTO toDTOAndamento(SessaoVotacao sessaoVotacao) {
         return SessaoVotacaoAndamentoDTO.builder()
-                .oid(dto.getOid())
-                .dataHoraInicio(dto.getDataHoraInicio())
-                .dataHoraFim(dto.getDataHoraFim())
-                .ativa(dto.getAtiva())
+                .oid(sessaoVotacao.getOid())
+                .dataHoraInicio(sessaoVotacao.getDataHoraInicio())
+                .dataHoraFim(sessaoVotacao.getDataHoraFim())
+                .ativa(sessaoVotacao.getAtiva())
                 .build();
     }
 }

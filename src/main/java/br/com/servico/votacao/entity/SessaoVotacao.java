@@ -22,14 +22,17 @@ public class SessaoVotacao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer oid;
 
+    @Column(name = "data_hora_inicio")
     private LocalDateTime dataHoraInicio;
 
+    @Column(name = "data_hora_fim")
     private LocalDateTime dataHoraFim;
 
+    @Column(name = "status")
     private Boolean ativa;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "oid_votacao", referencedColumnName = "oid", nullable = false)
     private Votacao votacao;
 

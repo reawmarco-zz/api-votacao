@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/api/v1/sessoes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/sessoes-votacao", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class SessaoVotacaoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessaoVotacaoController.class);
@@ -33,10 +33,9 @@ public class SessaoVotacaoController {
     public ResponseEntity<?> abrirSessaoVotacao(@Valid @RequestBody SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
         LOGGER.info("Abrindo a sessao para votacao");
         SessaoVotacaoDTO dto = service.abrirSessaoVotacao(sessaoVotacaoAbrirDTO);
-        LOGGER.info("Sessao para votacao da pauta {oid} aberta", dto.getVotacaoDTO().getPautaDTO().getOid());
-        LOGGER.info("Hora de inicio sessao para votacao {localDateTime}", dto.getDataHoraInicio());
-        LOGGER.info("Hora de encerramento sessao para votacao {localDateTime}", dto.getDataHoraFim());
+        LOGGER.info("Sessao para votacao da pauta {} aberta", dto.getVotacaoDTO().getPautaDTO().getOid());
+        LOGGER.info("Hora de inicio sessao para votacao {}", dto.getDataHoraInicio());
+        LOGGER.info("Hora de encerramento sessao para votacao {}", dto.getDataHoraFim());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-
 }

@@ -1,9 +1,6 @@
 package br.com.servico.votacao.service;
 
-import br.com.servico.votacao.dto.PautaDTO;
-import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
-import br.com.servico.votacao.dto.SessaoVotacaoDTO;
-import br.com.servico.votacao.dto.VotacaoDTO;
+import br.com.servico.votacao.dto.*;
 import br.com.servico.votacao.entity.SessaoVotacao;
 import br.com.servico.votacao.repository.SessaoVotacaoRepository;
 import org.slf4j.Logger;
@@ -20,12 +17,11 @@ import java.util.stream.Collectors;
 public class SessaoVotacaoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessaoVotacaoService.class);
+    private static final Integer TEMPO_DEFAULT = 1;
 
     private final SessaoVotacaoRepository repository;
     private final VotacaoService votacaoService;
-    private static final Integer TEMPO_DEFAULT = 1;
     private final PautaService pautaService;
-
 
     @Autowired
     public SessaoVotacaoService(SessaoVotacaoRepository repository, VotacaoService votacaoService, PautaService pautaService) {
@@ -36,7 +32,7 @@ public class SessaoVotacaoService {
 
 
     public SessaoVotacaoDTO abrirSessaoVotacao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
-        LOGGER.info("Abrir sessao de votacao para a pauta {oidPauta}", sessaoVotacaoAbrirDTO.getOidPauta());
+        LOGGER.info("Abrir sessao de votacao para a pauta {}", sessaoVotacaoAbrirDTO.getOidPauta());
 
         PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(sessaoVotacaoAbrirDTO.getOidPauta());
         VotacaoDTO votacaoDTO = votacaoService.iniciarVotacao(pautaDTO);
@@ -50,10 +46,11 @@ public class SessaoVotacaoService {
         return salvar(dto);
     }
 
-    public List<SessaoVotacaoDTO> buscarSessaoesEmAndamento() {
-        List<SessaoVotacaoDTO> list = repository.buscarTodasSessoesEmAndamento()
+    public List<SessaoVotacaoAndamentoDTO> buscarSessaoesEmAndamento() {
+        LOGGER.info("Buscando sessoes em andamento");
+        List<SessaoVotacaoAndamentoDTO> list = repository.buscarTodasSessoesEmAndamento(Boolean.TRUE)
                 .stream()
-                .map(SessaoVotacaoDTO::toDTO)
+                .map(SessaoVotacaoAndamentoDTO::toDTOAndamento)
                 .collect(Collectors.toList());
 
         return list
@@ -62,9 +59,10 @@ public class SessaoVotacaoService {
                 .collect(Collectors.toList());
     }
 
-    public void encerraoSessaoVotacao(SessaoVotacaoDTO dto) {
+    public void encerraoSessaoVotacao(SessaoVotacaoAndamentoDTO dto) {
+        LOGGER.info("Encerrando sessao com tempo de duracao expirado {}", dto.getOid());
         dto.setAtiva(Boolean.FALSE);
-        salvar(dto);
+        salvar(buscarSessaoVotacaoPeloOID(dto.getOid()));
     }
 
     private SessaoVotacaoDTO buscarSessaoVotacaoPeloOID(Integer oid) {
@@ -84,7 +82,10 @@ public class SessaoVotacaoService {
     }
 
     private SessaoVotacaoDTO salvar(SessaoVotacaoDTO dto) {
-        LOGGER.info("salvar sessao de votacao para a pauta {oidPauta}", dto.getVotacaoDTO().getPautaDTO().getOid());
-        return SessaoVotacaoDTO.toDTO(repository.save(SessaoVotacaoDTO.toEntity(dto)));
+        LOGGER.info("salvar sessao de votacao para a pauta {}", dto.getVotacaoDTO().getPautaDTO().getOid());
+        if (Optional.ofNullable(dto).isPresent()) {
+            return SessaoVotacaoDTO.toDTO(repository.save(SessaoVotacaoDTO.toEntity(dto)));
+        }
+        return null;
     }
 }
