@@ -13,15 +13,15 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class VotarDTO {
 
-    @NotNull
+    @NotNull(message = "oidPauta deve ser preenchido")
     private Integer oidPauta;
 
-    @NotNull
+    @NotNull(message = "oidSessaoVotacao deve ser preenchido")
     private Integer oidSessaoVotacao;
 
-    @NotNull
+    @NotNull(message = "voto deve ser preenchido")
     private Boolean voto;
 
-    @NotNull
+    @NotNull(message = "associado deve ser preenchido")
     private Integer associado;
 }

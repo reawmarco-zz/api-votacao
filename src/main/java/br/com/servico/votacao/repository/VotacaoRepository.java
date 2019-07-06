@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VotacaoRepository extends JpaRepository<Votacao, Integer> {
 
+    Integer countVotacaoByOidPautaAndOidSessaoVotacaoAndVoto(Integer oidPauta, Integer oidSessaoVotacao, Boolean voto);
 }

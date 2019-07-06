@@ -24,9 +24,12 @@ public class CronometroComponent {
     private void teste() {
         LOGGER.info("Contador de tempo sendo excutado...");
         List<SessaoVotacaoAndamentoDTO> list = sessaoVotacaoService.buscarSessaoesEmAndamento();
+        LOGGER.info("Quantidade de sessoes abertas  = {}", list.size());
         list.forEach(dto -> {
             LOGGER.info("Sessao encerrada {}", dto.getOid());
-            sessaoVotacaoService.encerraoSessaoVotacao(dto);
+            if (dto.getAtiva()) {
+                sessaoVotacaoService.encerraoSessaoVotacao(dto);
+            }
         });
     }
 }

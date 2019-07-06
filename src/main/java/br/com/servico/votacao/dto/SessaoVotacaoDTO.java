@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SessaoVotacaoDTO {
 
-
     private Integer oid;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;

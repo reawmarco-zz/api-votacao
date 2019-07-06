@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -24,11 +23,9 @@ public class Votacao {
     @Column(name = "voto")
     private Boolean voto;
 
-    @NotNull
     @Column(name = "oid_pauta")
     private Integer oidPauta;
 
-    @NotNull
     @Column(name = "oid_sessao_votacao")
     private Integer oidSessaoVotacao;
 }

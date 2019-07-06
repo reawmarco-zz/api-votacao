@@ -16,10 +16,10 @@ public class AssociadoDTO {
 
     private Integer oid;
 
-    @NotNull
+    @NotNull(message = "oidAssociado deve ser preenchido")
     private Integer oidAssociado;
 
-    @NotNull
+    @NotNull(message = "oidPauta deve ser preenchido")
     private Integer oidPauta;
 
     public static final Associado toEntity(AssociadoDTO dto) {

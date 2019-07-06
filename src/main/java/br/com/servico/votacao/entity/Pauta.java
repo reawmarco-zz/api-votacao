@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -22,7 +21,6 @@ public class Pauta {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer oid;
 
-    @NotNull
     @Column(name = "descricao", length = 100, nullable = false)
     private String descricao;
 

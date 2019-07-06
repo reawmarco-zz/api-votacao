@@ -1,5 +1,6 @@
 package br.com.servico.votacao.service;
 
+import br.com.servico.votacao.dto.AssociadoDTO;
 import br.com.servico.votacao.repository.AssociadoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,5 +25,11 @@ public class AssociadoService {
     public Boolean isValidaParticipacaoAssociadoVotacao(Integer oidAssociado, Integer oidPauta) {
         LOGGER.info("Validando participacao do associado na votacao da pauta  oid = {}", oidPauta);
         return repository.existsByOidAssociadoAndOidPauta(oidAssociado, oidPauta);
+    }
+
+    @Transactional
+    public AssociadoDTO salvarAssociado(AssociadoDTO dto) {
+        LOGGER.info("Registrando participacao do associado na votacao oidAssociado = {}, oidPauta = {}", dto.getOidAssociado(), dto.getOidPauta());
+        return AssociadoDTO.toDTO(repository.save(AssociadoDTO.toEntity(dto)));
     }
 }

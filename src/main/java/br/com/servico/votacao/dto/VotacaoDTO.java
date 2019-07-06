@@ -16,6 +16,8 @@ public class VotacaoDTO {
     private Integer oidPauta;
     private Integer oidSessaoVotacao;
     private Boolean voto;
+    private Integer quantidadeVotosSim;
+    private Integer quantidadeVotosNao;
 
     public static final Votacao toEntity(VotacaoDTO dto) {
         return Votacao.builder()
