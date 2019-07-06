@@ -24,7 +24,6 @@ public class SessaoVotacaoAndamentoDTO {
                 .oid(dto.getOid())
                 .dataHoraInicio(dto.getDataHoraInicio())
                 .dataHoraFim(dto.getDataHoraFim())
-                .tempo(dto.getTempo())
                 .ativa(dto.getAtiva())
                 .build();
     }

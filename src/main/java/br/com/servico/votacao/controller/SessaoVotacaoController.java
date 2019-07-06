@@ -1,5 +1,6 @@
 package br.com.servico.votacao.controller;
 
+import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.service.SessaoVotacaoService;
 import org.slf4j.Logger;
@@ -8,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/sessoes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,10 +29,13 @@ public class SessaoVotacaoController {
         this.service = service;
     }
 
-    @PostMapping(value = "/abrir-sessao/{oidPauta}/{tempo}")
-    public ResponseEntity<?> abrirSessaoVotacao(@PathVariable("oidPauta") Integer oidPauta, @PathVariable("tempo") Integer tempo) {
+    @PostMapping(value = "/abrir-sessao")
+    public ResponseEntity<?> abrirSessaoVotacao(@Valid @RequestBody SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
         LOGGER.info("Abrindo a sessao para votacao");
-        SessaoVotacaoDTO dto = service.abrirSessaoVotacao(oidPauta, tempo);
+        SessaoVotacaoDTO dto = service.abrirSessaoVotacao(sessaoVotacaoAbrirDTO);
+        LOGGER.info("Sessao para votacao da pauta {oid} aberta", dto.getVotacaoDTO().getPautaDTO().getOid());
+        LOGGER.info("Hora de inicio sessao para votacao {localDateTime}", dto.getDataHoraInicio());
+        LOGGER.info("Hora de encerramento sessao para votacao {localDateTime}", dto.getDataHoraFim());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 

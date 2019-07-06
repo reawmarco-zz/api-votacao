@@ -1,6 +1,7 @@
 package br.com.servico.votacao.service;
 
 import br.com.servico.votacao.dto.PautaDTO;
+import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.dto.VotacaoDTO;
 import br.com.servico.votacao.entity.SessaoVotacao;
@@ -34,18 +35,17 @@ public class SessaoVotacaoService {
     }
 
 
-    public SessaoVotacaoDTO abrirSessaoVotacao(Integer oidPauta, Integer tempo) {
-        LOGGER.info("Abrir sessao de votacao para a pauta {oidPauta}", oidPauta);
+    public SessaoVotacaoDTO abrirSessaoVotacao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
+        LOGGER.info("Abrir sessao de votacao para a pauta {oidPauta}", sessaoVotacaoAbrirDTO.getOidPauta());
 
-        PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(oidPauta);
+        PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(sessaoVotacaoAbrirDTO.getOidPauta());
         VotacaoDTO votacaoDTO = votacaoService.iniciarVotacao(pautaDTO);
 
         SessaoVotacaoDTO dto = new SessaoVotacaoDTO(
                 null,
                 votacaoDTO,
                 LocalDateTime.now(),
-                calcularTempo(tempo),
-                tempo,
+                calcularTempo(sessaoVotacaoAbrirDTO.getTempo()),
                 Boolean.TRUE);
         return salvar(dto);
     }
