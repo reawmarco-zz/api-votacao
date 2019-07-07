@@ -21,12 +21,12 @@ public class AssociadoDTO {
 
     private Integer oid;
 
-    @ApiModelProperty(value = "CPF válido referente ao associado.", required = true)
+    @ApiModelProperty(value = "CPF válido referente ao associado")
     @CPF(message = "Não é um CPF valido")
     @NotBlank(message = "CPF do associado deve ser preenchido")
     private String cpfAssociado;
 
-    @ApiModelProperty(value = "ID da pauta a ser votada.", required = true, reference = "PautaDTO")
+    @ApiModelProperty(value = "ID da pauta a ser votada")
     @NotNull(message = "oidPauta deve ser preenchido")
     private Integer oidPauta;
 

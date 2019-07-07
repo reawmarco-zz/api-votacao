@@ -17,16 +17,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SessaoVotacaoDTO {
 
-    @ApiModelProperty(value = "ID da sessão de votação aberta", reference = "SessaoVotacaoDTO")
+    @ApiModelProperty(value = "ID da sessão de votação aberta")
     private Integer oid;
 
-    @ApiModelProperty(value = "Data Hora de início da sessão de votação aberta", reference = "SessaoVotacaoDTO")
+    @ApiModelProperty(value = "Data Hora de início da sessão de votação aberta")
     private LocalDateTime dataHoraInicio;
 
-    @ApiModelProperty(value = "Data Hora de fim sessão de votação aberta", reference = "SessaoVotacaoDTO")
+    @ApiModelProperty(value = "Data Hora de fim sessão de votação aberta")
     private LocalDateTime dataHoraFim;
 
-    @ApiModelProperty(value = "Status da sessão de votação aberta", reference = "SessaoVotacaoDTO")
+    @ApiModelProperty(value = "Status da sessão de votação aberta")
     private Boolean ativa;
 
 

@@ -25,7 +25,6 @@ public class SessaoVotacaoService {
     private final SessaoVotacaoRepository repository;
     private final PautaService pautaService;
 
-
     @Autowired
     public SessaoVotacaoService(SessaoVotacaoRepository repository, PautaService pautaService) {
         this.repository = repository;

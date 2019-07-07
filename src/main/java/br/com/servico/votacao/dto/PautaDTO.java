@@ -20,7 +20,7 @@ public class PautaDTO {
     @ApiModelProperty(value = "ID Pauta", required = true)
     private Integer oid;
 
-    @ApiModelProperty(value = "Descrição referente o que será votado.", required = true)
+    @ApiModelProperty(value = "Descrição referente o que será votado")
     @NotBlank(message = "Descrição deve ser preenchido")
     private String descricao;
 

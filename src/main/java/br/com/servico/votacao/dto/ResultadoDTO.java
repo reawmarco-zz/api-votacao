@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResultadoDTO {
 
-    @ApiModelProperty(value = "Objeto PautaDTO com os dados do que foi votado", reference = "PautaDTO")
+    @ApiModelProperty(value = "Objeto PautaDTO com os dados do que foi votado")
     private PautaDTO pautaDTO;
-    @ApiModelProperty(value = "Objeto VotacaoDTO com dados do resultado da votação", reference = "VotacaoDTO")
+    @ApiModelProperty(value = "Objeto VotacaoDTO com dados do resultado da votação")
     private VotacaoDTO votacaoDTO;
 }

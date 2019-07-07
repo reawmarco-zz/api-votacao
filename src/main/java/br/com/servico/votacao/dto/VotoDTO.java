@@ -16,19 +16,19 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class VotoDTO {
 
-    @ApiModelProperty(value = "ID da pauta da votação aberta", reference = "PautaDTO", required = true)
+    @ApiModelProperty(value = "ID da pauta da votação aberta")
     @NotNull(message = "oidPauta deve ser preenchido")
     private Integer oidPauta;
 
-    @ApiModelProperty(value = "ID da sessão de votação aberta", reference = "VotacaoDTO", required = true)
+    @ApiModelProperty(value = "ID da sessão de votação aberta")
     @NotNull(message = "oidSessaoVotacao deve ser preenchido")
     private Integer oidSessaoVotacao;
 
-    @ApiModelProperty(value = "Voto", reference = "VotoDTO", required = true)
+    @ApiModelProperty(value = "Voto")
     @NotNull(message = "Voto deve ser preenchido")
     private Boolean voto;
 
-    @ApiModelProperty(value = "CPF valido do associaddo", reference = "AssociadoDTO", required = true)
+    @ApiModelProperty(value = "CPF valido do associado")
     @CPF(message = "Não é um CPF valido")
     @NotBlank(message = "cpf do associado deve ser preenchido")
     private String cpfAssociado;
