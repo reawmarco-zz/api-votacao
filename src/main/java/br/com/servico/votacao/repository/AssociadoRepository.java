@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssociadoRepository extends JpaRepository<Associado, Integer> {
 
-    Boolean existsByOidAssociadoAndOidPauta(Integer oidAssociado, Integer oidPauta);
+    Boolean existsByCpfAssociadoAndOidPauta(String cpfAssociado, Integer oidPauta);
 }

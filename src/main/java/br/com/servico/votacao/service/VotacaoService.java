@@ -31,18 +31,21 @@ public class VotacaoService {
 
     @Transactional(readOnly = true)
     public Boolean isValidaVoto(VotarDTO dto) {
-        LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
+        LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
-            LOGGER.error("Pauta nao localizada para votacao oidPauta {}", dto.getAssociado());
+            LOGGER.error("Pauta nao localizada para votacao oidPauta {}", dto.getCpfAssociado());
             throw new NotFoundException("Pauta não localizada oid " + dto.getOidPauta());
 
         } else if (!sessaoVotacaoService.isSessaoVotacaoValida(dto.getOidSessaoVotacao())) {
             LOGGER.error("Tentativa de voto para sessao encerrada oidSessaoVotacao {}", dto.getOidSessaoVotacao());
             throw new SessoEncerradaException("Sessão de votação já encerrada");
 
-        } else if (!associadoService.isValidaParticipacaoAssociadoVotacao(dto.getAssociado(), dto.getOidPauta())) {
-            LOGGER.error("Associado tentou votar mais de 1 vez oidAssociado {}", dto.getAssociado());
+        } else if (associadoService.isAssociadoPodeVotar(dto.getCpfAssociado())) {
+            LOGGER.error("Associado nao esta habilitado para votar {}", dto.getCpfAssociado());
+            throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
+        } else if (!associadoService.isValidaParticipacaoAssociadoVotacao(dto.getCpfAssociado(), dto.getOidPauta())) {
+            LOGGER.error("Associado tentou votar mais de 1 vez oidAssociado {}", dto.getCpfAssociado());
             throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
         }
 
@@ -52,7 +55,7 @@ public class VotacaoService {
     @Transactional
     public VotacaoDTO votar(VotarDTO dto) {
         if (isValidaVoto(dto)) {
-            LOGGER.debug("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getAssociado());
+            LOGGER.debug("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
             VotacaoDTO votacaoDTO = new VotacaoDTO(null,
                     dto.getOidPauta(),
@@ -72,7 +75,7 @@ public class VotacaoService {
 
     @Transactional
     public void registrarAssociadoVotou(VotarDTO dto) {
-        AssociadoDTO associadoDTO = new AssociadoDTO(null, dto.getAssociado(), dto.getOidPauta());
+        AssociadoDTO associadoDTO = new AssociadoDTO(null, dto.getCpfAssociado(), dto.getOidPauta());
         associadoService.salvarAssociado(associadoDTO);
     }
 

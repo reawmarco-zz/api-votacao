@@ -16,8 +16,8 @@ public class AssociadoDTO {
 
     private Integer oid;
 
-    @NotNull(message = "oidAssociado deve ser preenchido")
-    private Integer oidAssociado;
+    @NotNull(message = "cpfAssociado deve ser preenchido")
+    private String cpfAssociado;
 
     @NotNull(message = "oidPauta deve ser preenchido")
     private Integer oidPauta;
@@ -25,7 +25,7 @@ public class AssociadoDTO {
     public static final Associado toEntity(AssociadoDTO dto) {
         return Associado.builder()
                 .oid(dto.getOid())
-                .oidAssociado(dto.getOidAssociado())
+                .cpfAssociado(dto.getCpfAssociado())
                 .oidPauta(dto.getOidPauta())
                 .build();
     }
@@ -33,7 +33,7 @@ public class AssociadoDTO {
     public static final AssociadoDTO toDTO(Associado associado) {
         return AssociadoDTO.builder()
                 .oid(associado.getOid())
-                .oidAssociado(associado.getOidAssociado())
+                .cpfAssociado(associado.getCpfAssociado())
                 .oidPauta(associado.getOidPauta())
                 .build();
     }

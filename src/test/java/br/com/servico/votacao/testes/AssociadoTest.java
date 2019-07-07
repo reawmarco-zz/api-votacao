@@ -2,6 +2,7 @@ package br.com.servico.votacao.testes;
 
 import br.com.servico.votacao.entity.Associado;
 import br.com.servico.votacao.repository.AssociadoRepository;
+import br.com.servico.votacao.service.AssociadoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,33 +18,42 @@ public class AssociadoTest {
     @Autowired
     private AssociadoRepository repository;
 
+    @Autowired
+    private AssociadoService associadoService;
+
     @Test
     public void devePersistirAssociado() {
-        Associado associado = new Associado(null, 123123, 1);
+        Associado associado = new Associado(null, "123123", 1);
         this.repository.save(associado);
         assertThat(associado.getOid()).isNotNull();
-        assertThat(associado.getOidAssociado()).isEqualTo(123123);
+        assertThat(associado.getCpfAssociado()).isEqualTo("123123");
     }
 
     @Test
     public void deveRetornarUmAssociado() {
-        Associado associado = new Associado(null, 123123, 1);
+        Associado associado = new Associado(null, "123123", 1);
         this.repository.save(associado);
         assertThat(this.repository.findById(1)).isNotNull();
     }
 
     @Test
     public void deveRetonarVerdadeiro() {
-        Associado associado = new Associado(null, 123123, 1);
+        Associado associado = new Associado(null, "123123", 1);
         this.repository.save(associado);
-        assertThat(this.repository.existsByOidAssociadoAndOidPauta(123123, 1)).isTrue();
+        assertThat(this.repository.existsByCpfAssociadoAndOidPauta("123123", 1)).isTrue();
     }
 
     @Test
     public void deveRetonarFalso() {
-        Associado associado = new Associado(null, 123123, 12);
+        Associado associado = new Associado(null, "123123", 12);
         this.repository.save(associado);
-        assertThat(this.repository.existsByOidAssociadoAndOidPauta(123123, 1)).isFalse();
+        assertThat(this.repository.existsByCpfAssociadoAndOidPauta("123123", 1)).isFalse();
+    }
+
+    @Test
+    public void deveVerificarAssociadoHabilitadoParaVotar() {
+        String cpf = "02667934016";
+        assertThat(this.associadoService.isAssociadoPodeVotar(cpf)).isTrue();
     }
 
 }

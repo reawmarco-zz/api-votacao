@@ -22,6 +22,6 @@ public class VotarDTO {
     @NotNull(message = "voto deve ser preenchido")
     private Boolean voto;
 
-    @NotNull(message = "associado deve ser preenchido")
-    private Integer associado;
+    @NotNull(message = "cpf do associado deve ser preenchido")
+    private String cpfAssociado;
 }

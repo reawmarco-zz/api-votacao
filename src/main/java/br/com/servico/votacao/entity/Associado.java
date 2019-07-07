@@ -20,8 +20,8 @@ public class Associado {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer oid;
 
-    @Column(name = "oid_associado")
-    private Integer oidAssociado;
+    @Column(name = "cpf_associado")
+    private String cpfAssociado;
 
     @Column(name = "oid_pauta")
     private Integer oidPauta;

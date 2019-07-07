@@ -17,6 +17,7 @@ public class VotacaoTest {
     @Autowired
     VotacaoRepository repository;
 
+
     @Test
     public void devePersistirVotacao() {
         Votacao votacao = new Votacao(null, Boolean.TRUE, 1, 1);

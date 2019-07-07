@@ -27,9 +27,9 @@ public class VotacaoController {
 
     @PostMapping(value = "/votar")
     public ResponseEntity<?> votar(@Valid @RequestBody VotarDTO dto) {
-        LOGGER.debug("Associado votando associado = {}", dto.getAssociado());
+        LOGGER.debug("Associado votando associado = {}", dto.getCpfAssociado());
         service.votar(dto);
-        LOGGER.debug("Voto associado finalizado associado = {}", dto.getAssociado());
+        LOGGER.debug("Voto associado finalizado associado = {}", dto.getCpfAssociado());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
