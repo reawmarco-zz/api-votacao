@@ -12,15 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AssociadoService {
 
-    private static final String ABLE_TO_VOTE = "ABLE_TO_VOTE";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(AssociadoService.class);
     private final AssociadoRepository repository;
     private ValidaCPFClient validaCPFClient;
 
     @Autowired
-    public AssociadoService(AssociadoRepository repository) {
+    public AssociadoService(AssociadoRepository repository, ValidaCPFClient validaCPFClient) {
         this.repository = repository;
+        this.validaCPFClient = validaCPFClient;
     }
 
 
@@ -37,6 +36,6 @@ public class AssociadoService {
     }
 
     public Boolean isAssociadoPodeVotar(String cpf) {
-        return ABLE_TO_VOTE.equals(validaCPFClient.verificarPermissaoAssocidadoPeloCPF(cpf));
+        return validaCPFClient.isVerificaAssociadoHabilitadoVotacao(cpf);
     }
 }

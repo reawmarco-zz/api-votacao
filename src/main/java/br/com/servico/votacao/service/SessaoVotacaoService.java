@@ -78,7 +78,7 @@ public class SessaoVotacaoService {
     public SessaoVotacaoDTO buscarSessaoVotacaoPeloOID(Integer oid) {
         Optional<SessaoVotacao> optionalSessaoVotacao = repository.findById(oid);
         if (!optionalSessaoVotacao.isPresent()) {
-            LOGGER.error("Sessao de votacao nao localizada para o oid " + oid);
+            LOGGER.error("Sessao de votacao nao localizada para o oid {}", oid);
             throw new NotFoundException("Sessão de votação não localizada para o oid " + oid);
         }
         return SessaoVotacaoDTO.toDTO(optionalSessaoVotacao.get());

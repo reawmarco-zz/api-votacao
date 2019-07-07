@@ -34,7 +34,7 @@ public class PautaService {
         Optional<Pauta> pautaOptional = repository.findById(oid);
 
         if (!pautaOptional.isPresent()) {
-            LOGGER.error("Pauta não localizada para oid" + oid);
+            LOGGER.error("Pauta não localizada para oid {}", oid);
             throw new NotFoundException("Pauta não localizada para o oid " + oid);
         }
 

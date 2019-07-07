@@ -2,12 +2,14 @@ package br.com.servico.votacao.testes;
 
 import br.com.servico.votacao.entity.Associado;
 import br.com.servico.votacao.repository.AssociadoRepository;
-import br.com.servico.votacao.service.AssociadoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,9 +19,6 @@ public class AssociadoTest {
 
     @Autowired
     private AssociadoRepository repository;
-
-    @Autowired
-    private AssociadoService associadoService;
 
     @Test
     public void devePersistirAssociado() {
@@ -52,8 +51,10 @@ public class AssociadoTest {
 
     @Test
     public void deveVerificarAssociadoHabilitadoParaVotar() {
-        String cpf = "02667934016";
-        assertThat(this.associadoService.isAssociadoPodeVotar(cpf)).isTrue();
+        String cpf = "60667015094";
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl = "https://user-info.herokuapp.com/users/".concat(cpf);
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
 }
