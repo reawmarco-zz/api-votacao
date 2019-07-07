@@ -128,6 +128,20 @@ public class SessaoVotacaoService {
     }
 
     /**
+     * @param oid - @{@link SessaoVotacao} ID
+     * @return - boolean
+     */
+    @Transactional(readOnly = true)
+    public boolean isSessaoVotacaoExiste(Integer oid) {
+        if (repository.existsByOid(oid)) {
+            return Boolean.TRUE;
+        } else {
+            LOGGER.error("Sessao de votacao nao localizada para o oid {}", oid);
+            throw new NotFoundException("Sessão de votação não localizada para o oid " + oid);
+        }
+    }
+
+    /**
      * Se houver a sessao de ID informado e com tag ativa igual a FALSE
      * entao e considerada como valida para contagem
      *

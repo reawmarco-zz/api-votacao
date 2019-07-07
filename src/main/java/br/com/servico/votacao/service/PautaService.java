@@ -59,6 +59,11 @@ public class PautaService {
      */
     @Transactional(readOnly = true)
     public boolean isPautaValida(Integer oid) {
-        return repository.existsByOid(oid);
+        if (repository.existsByOid(oid)) {
+            return Boolean.TRUE;
+        } else {
+            LOGGER.error("Pauta não localizada para oid {}", oid);
+            throw new NotFoundException("Pauta não localizada para o oid " + oid);
+        }
     }
 }

@@ -15,4 +15,6 @@ public interface SessaoVotacaoRepository extends JpaRepository<SessaoVotacao, In
     List<SessaoVotacao> buscarTodasSessoesEmAndamento(Boolean ativo);
 
     Boolean existsByOidAndAndAtiva(Integer oid, Boolean ativa);
+
+    Boolean existsByOid(Integer oid);
 }

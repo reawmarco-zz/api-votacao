@@ -147,13 +147,23 @@ public class VotacaoService {
      */
     @Transactional(readOnly = true)
     public ResultadoDTO buscarDadosResultadoVotacao(Integer oidPauta, Integer oidSessaoVotacao) {
-        if (sessaoVotacaoService.isSessaoValidaParaContagem(oidSessaoVotacao)) {
+
+        if (isValidaSeDadosExistem(oidPauta, oidSessaoVotacao) && sessaoVotacaoService.isSessaoValidaParaContagem(oidSessaoVotacao)) {
             LOGGER.debug("Construindo o objeto de retorno do resultado para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
             PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(oidPauta);
             VotacaoDTO votacaoDTO = buscarResultadoVotacao(oidPauta, oidSessaoVotacao);
             return new ResultadoDTO(pautaDTO, votacaoDTO);
         }
-
         throw new NotFoundException("Sessão de votação ainda está aberta, não é possível obter a contagem do resultado.");
+    }
+
+    /**
+     * @param oidPauta         - @{@link br.com.servico.votacao.entity.Pauta} ID
+     * @param oidSessaoVotacao - @{@link br.com.servico.votacao.entity.SessaoVotacao} ID
+     * @return - boolean
+     */
+    @Transactional(readOnly = true)
+    public boolean isValidaSeDadosExistem(Integer oidPauta, Integer oidSessaoVotacao) {
+        return sessaoVotacaoService.isSessaoVotacaoExiste(oidSessaoVotacao) && pautaService.isPautaValida(oidPauta);
     }
 }
