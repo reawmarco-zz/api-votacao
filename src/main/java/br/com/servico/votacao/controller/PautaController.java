@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/pautas")
-@Api(value = "Pauta", produces = "JSON", consumes = "JSON", tags = "Pauta")
+@Api(value = "Pauta", tags = "Pauta")
 public class PautaController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PautaController.class);

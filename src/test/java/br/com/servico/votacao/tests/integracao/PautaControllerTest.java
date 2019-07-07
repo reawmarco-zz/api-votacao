@@ -26,7 +26,7 @@ public class PautaControllerTest {
 
     @Test
     public void deveraCadastrarUmaNovaPauta() {
-        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO("Teste Cadastro Pauta"), PautaDTO.class);
+        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null, "Teste Cadastro Pauta"), PautaDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -42,7 +42,7 @@ public class PautaControllerTest {
 
     @Test
     public void deveraCadastrarUmaPautaComValoresNULL_QuandoRetornaErro() {
-        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null), PautaDTO.class);
+        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null, null), PautaDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 

@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@ApiModel(value = "VotacaoDTO")
+@ApiModel(value = "VotoDTO")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -17,18 +17,23 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class PautaDTO {
 
+    @ApiModelProperty(value = "ID Pauta", required = true)
+    private Integer oid;
+
     @ApiModelProperty(value = "Descrição referente o que será votado.", required = true)
     @NotBlank(message = "Descrição deve ser preenchido")
     private String descricao;
 
     public static Pauta toEntity(PautaDTO dto) {
         return Pauta.builder()
+                .oid(dto.getOid())
                 .descricao(dto.getDescricao())
                 .build();
     }
 
     public static PautaDTO toDTO(Pauta pauta) {
         return PautaDTO.builder()
+                .oid(pauta.getOid())
                 .descricao(pauta.getDescricao())
                 .build();
     }

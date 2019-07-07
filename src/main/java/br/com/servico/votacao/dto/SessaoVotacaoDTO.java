@@ -19,10 +19,13 @@ public class SessaoVotacaoDTO {
 
     @ApiModelProperty(value = "ID da sessão de votação aberta", reference = "SessaoVotacaoDTO")
     private Integer oid;
+
     @ApiModelProperty(value = "Data Hora de início da sessão de votação aberta", reference = "SessaoVotacaoDTO")
     private LocalDateTime dataHoraInicio;
+
     @ApiModelProperty(value = "Data Hora de fim sessão de votação aberta", reference = "SessaoVotacaoDTO")
     private LocalDateTime dataHoraFim;
+
     @ApiModelProperty(value = "Status da sessão de votação aberta", reference = "SessaoVotacaoDTO")
     private Boolean ativa;
 

@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/votacoes")
-@Api(value = "Votacao", produces = "JSON", consumes = "JSON", tags = "Votacao")
+@Api(value = "Votacao", tags = "Votacao")
 public class VotacaoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VotacaoController.class);
