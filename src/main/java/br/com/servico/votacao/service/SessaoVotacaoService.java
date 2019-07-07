@@ -1,7 +1,6 @@
 package br.com.servico.votacao.service;
 
 import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
-import br.com.servico.votacao.dto.SessaoVotacaoAndamentoDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.entity.SessaoVotacao;
 import br.com.servico.votacao.exception.NotFoundException;
@@ -74,14 +73,14 @@ public class SessaoVotacaoService {
     /**
      * busca se ha sessoes em andamento, se houver, os dados sao retornados para o validador de tempo
      *
-     * @return - List<@{@link SessaoVotacaoAndamentoDTO}>
+     * @return - List<@{@link SessaoVotacaoDTO}>
      */
     @Transactional(readOnly = true)
-    public List<SessaoVotacaoAndamentoDTO> buscarSessaoesEmAndamento() {
+    public List<SessaoVotacaoDTO> buscarSessaoesEmAndamento() {
         LOGGER.debug("Buscando sessoes em andamento");
-        List<SessaoVotacaoAndamentoDTO> list = repository.buscarTodasSessoesEmAndamento(Boolean.TRUE)
+        List<SessaoVotacaoDTO> list = repository.buscarTodasSessoesEmAndamento(Boolean.TRUE)
                 .stream()
-                .map(SessaoVotacaoAndamentoDTO::toDTOAndamento)
+                .map(SessaoVotacaoDTO::toDTO)
                 .collect(Collectors.toList());
 
         return list
@@ -94,10 +93,10 @@ public class SessaoVotacaoService {
      * Quando houver sessao de votacao com o tempo data hora fim expirado,
      * a flag ativo é setado como FALSE e persistido a alteracao na base de dados.
      *
-     * @param dto - @{@link SessaoVotacaoAndamentoDTO}
+     * @param dto - @{@link SessaoVotacaoDTO}
      */
     @Transactional
-    public void encerraoSessaoVotacao(SessaoVotacaoAndamentoDTO dto) {
+    public void encerraoSessaoVotacao(SessaoVotacaoDTO dto) {
         LOGGER.debug("Encerrando sessao com tempo de duracao expirado {}", dto.getOid());
         dto.setAtiva(Boolean.FALSE);
         salvar(buscarSessaoVotacaoPeloOID(dto.getOid()));

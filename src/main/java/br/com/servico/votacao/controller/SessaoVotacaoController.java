@@ -3,6 +3,8 @@ package br.com.servico.votacao.controller;
 import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
 import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.service.SessaoVotacaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/sessoes-votacao")
+@Api(value = "Sessao Votacao", produces = "JSON", consumes = "JSON", tags = "Sessao Votacao")
 public class SessaoVotacaoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessaoVotacaoController.class);
@@ -28,8 +31,9 @@ public class SessaoVotacaoController {
         this.service = service;
     }
 
+    @ApiOperation(value = "Abrir uma sessão de votação, referente a determinada pauta")
     @PostMapping(value = "/abrir-sessao")
-    public ResponseEntity<?> abrirSessaoVotacao(@Valid @RequestBody SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
+    public ResponseEntity<SessaoVotacaoDTO> abrirSessaoVotacao(@Valid @RequestBody SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
         LOGGER.debug("Abrindo a sessao para votacao da pauta  oid = {}", sessaoVotacaoAbrirDTO.getOidPauta());
         SessaoVotacaoDTO dto = service.abrirSessaoVotacao(sessaoVotacaoAbrirDTO);
         LOGGER.debug("Sessao para votacao da pauta  oid = {} aberta", sessaoVotacaoAbrirDTO.getOidPauta());

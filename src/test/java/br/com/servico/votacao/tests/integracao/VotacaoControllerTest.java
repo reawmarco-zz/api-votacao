@@ -1,7 +1,7 @@
 package br.com.servico.votacao.tests.integracao;
 
 import br.com.servico.votacao.dto.ResultadoDTO;
-import br.com.servico.votacao.dto.VotarDTO;
+import br.com.servico.votacao.dto.VotoDTO;
 import br.com.servico.votacao.entity.Associado;
 import br.com.servico.votacao.entity.Pauta;
 import br.com.servico.votacao.entity.SessaoVotacao;
@@ -53,7 +53,7 @@ public class VotacaoControllerTest {
         sessaoVotacao = this.sessaoVotacaoRepository.save(sessaoVotacao);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
-                new VotarDTO(pauta.getOid(),
+                new VotoDTO(pauta.getOid(),
                         sessaoVotacao.getOid(),
                         Boolean.TRUE, "47819429038"),
                 String.class);
@@ -108,7 +108,7 @@ public class VotacaoControllerTest {
         sessaoVotacao = this.sessaoVotacaoRepository.save(sessaoVotacao);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
-                new VotarDTO(pauta.getOid(),
+                new VotoDTO(pauta.getOid(),
                         sessaoVotacao.getOid(),
                         Boolean.TRUE, "123"),
                 String.class);
@@ -130,7 +130,7 @@ public class VotacaoControllerTest {
         sessaoVotacao = this.sessaoVotacaoRepository.save(sessaoVotacao);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
-                new VotarDTO(pauta.getOid(),
+                new VotoDTO(pauta.getOid(),
                         sessaoVotacao.getOid(),
                         Boolean.TRUE,
                         "47819429038"),
@@ -156,13 +156,12 @@ public class VotacaoControllerTest {
         associadoRepository.save(associado);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
-                new VotarDTO(pauta.getOid(),
+                new VotoDTO(pauta.getOid(),
                         sessaoVotacao.getOid(),
                         Boolean.TRUE,
                         "47819429038"),
                 String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(responseEntity.getBody()).isEqualTo("Associado tentou votar mais de 1 vez oidAssociado " + associado.getCpfAssociado());
     }
 }

@@ -1,6 +1,6 @@
 package br.com.servico.votacao.schedule;
 
-import br.com.servico.votacao.dto.SessaoVotacaoAndamentoDTO;
+import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.service.SessaoVotacaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class CronometroComponent {
     @Scheduled(cron = "15 * * * * *")
     private void teste() {
         LOGGER.debug("Contador de tempo sendo excutado...");
-        List<SessaoVotacaoAndamentoDTO> list = sessaoVotacaoService.buscarSessaoesEmAndamento();
+        List<SessaoVotacaoDTO> list = sessaoVotacaoService.buscarSessaoesEmAndamento();
         LOGGER.debug("Quantidade de sessoes abertas  = {}", list.size());
         list.forEach(dto -> {
             LOGGER.debug("Sessao encerrada {}", dto.getOid());

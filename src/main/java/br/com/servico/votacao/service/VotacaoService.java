@@ -33,11 +33,11 @@ public class VotacaoService {
      * metodo responsavel por realizar as validacoes antes do voto ser computado
      * e persistido na base de dados
      *
-     * @param dto - @{@link VotarDTO}
+     * @param dto - @{@link VotoDTO}
      * @return - boolean
      */
     @Transactional(readOnly = true)
-    public boolean isValidaVoto(VotarDTO dto) {
+    public boolean isValidaVoto(VotoDTO dto) {
         LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
@@ -68,11 +68,11 @@ public class VotacaoService {
      * Se os dados informados para o voto, forem considerados validos
      * entao o voto é computado e persistido na base de dados.
      *
-     * @param dto - @{@link VotarDTO}
+     * @param dto - @{@link VotoDTO}
      * @return - String
      */
     @Transactional
-    public String votar(VotarDTO dto) {
+    public String votar(VotoDTO dto) {
         if (isValidaVoto(dto)) {
             LOGGER.debug("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
@@ -98,10 +98,10 @@ public class VotacaoService {
      * <p>
      * A opcao de voto nao e persistido na base de dados.
      *
-     * @param dto - @{@link VotarDTO}
+     * @param dto - @{@link VotoDTO}
      */
     @Transactional
-    public void registrarAssociadoVotou(VotarDTO dto) {
+    public void registrarAssociadoVotou(VotoDTO dto) {
         AssociadoDTO associadoDTO = new AssociadoDTO(null, dto.getCpfAssociado(), dto.getOidPauta());
         associadoService.salvarAssociado(associadoDTO);
     }

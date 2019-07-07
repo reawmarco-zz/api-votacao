@@ -1,7 +1,7 @@
 package br.com.servico.votacao.tests.integracao;
 
 import br.com.servico.votacao.dto.SessaoVotacaoAbrirDTO;
-import br.com.servico.votacao.dto.SessaoVotacaoAndamentoDTO;
+import br.com.servico.votacao.dto.SessaoVotacaoDTO;
 import br.com.servico.votacao.entity.Pauta;
 import br.com.servico.votacao.repository.PautaRepository;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class SessaoVotacaoControllerTest {
 
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(pauta.getOid(), null);
 
-        ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);
+        ResponseEntity<SessaoVotacaoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody().getAtiva()).isTrue();
         assertThat(responseEntity.getBody().getDataHoraInicio().format(formatter)).isEqualTo(LocalDateTime.now().format(formatter));
@@ -54,7 +54,7 @@ public class SessaoVotacaoControllerTest {
 
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(pauta.getOid(), 10);
 
-        ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);
+        ResponseEntity<SessaoVotacaoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody().getAtiva()).isTrue();
         assertThat(responseEntity.getBody().getDataHoraInicio().format(formatter)).isEqualTo(LocalDateTime.now().format(formatter));
@@ -65,15 +65,15 @@ public class SessaoVotacaoControllerTest {
     public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_404_quandoPauta_idNaoLocalizado() {
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(10, null);
 
-        ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);
+        ResponseEntity<SessaoVotacaoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_400_quandoPauta_null() throws Exception {
+    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_400_quandoPauta_null() {
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(null, null);
 
-        ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);
+        ResponseEntity<SessaoVotacaoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 

@@ -26,7 +26,7 @@ public class PautaControllerTest {
 
     @Test
     public void deveraCadastrarUmaNovaPauta() {
-        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null, "Teste Cadastro Pauta"), PautaDTO.class);
+        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO("Teste Cadastro Pauta"), PautaDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -37,13 +37,12 @@ public class PautaControllerTest {
 
         ResponseEntity<PautaDTO> responseEntity = restTemplate.getForEntity(url.concat("/{oid}"), PautaDTO.class, 1);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().getOid()).isEqualTo(1);
         assertThat(responseEntity.getBody().getDescricao()).isEqualTo(pauta.getDescricao());
     }
 
     @Test
     public void deveraCadastrarUmaPautaComValoresNULL_QuandoRetornaErro() {
-        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null, null), PautaDTO.class);
+        ResponseEntity<PautaDTO> responseEntity = restTemplate.postForEntity(url, new PautaDTO(null), PautaDTO.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -54,7 +53,6 @@ public class PautaControllerTest {
 
         ResponseEntity<PautaDTO> responseEntity = restTemplate.getForEntity(url.concat("/{oid}"), PautaDTO.class, 2);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(responseEntity.getBody().getOid()).isNotEqualTo(pauta.getOid());
         assertThat(responseEntity.getBody().getDescricao()).isNotEqualTo(pauta.getDescricao());
     }
 }
