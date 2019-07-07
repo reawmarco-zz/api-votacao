@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SessaoVotacaoControllerTest {
 
-    private static final String url = "/api/v1/votacoes";
+    private static final String url = "/api/v1/sessoes-votacao";
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm";
     @Autowired
     private TestRestTemplate restTemplate;
@@ -30,7 +30,7 @@ public class SessaoVotacaoControllerTest {
     private PautaRepository pautaRepository;
 
     @Test
-    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaSucesso() throws Exception {
+    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaSucesso() {
         Pauta pauta = new Pauta(null, "Teste Pauta 1");
         pauta = this.pautaRepository.save(pauta);
 
@@ -46,7 +46,7 @@ public class SessaoVotacaoControllerTest {
     }
 
     @Test
-    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaSucesso_e_tempoSessao10_minutos() throws Exception {
+    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaSucesso_e_tempoSessao10_minutos() {
         Pauta pauta = new Pauta(null, "Teste Pauta 1");
         pauta = this.pautaRepository.save(pauta);
 
@@ -62,7 +62,7 @@ public class SessaoVotacaoControllerTest {
     }
 
     @Test
-    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_404() throws Exception {
+    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_404_quandoPauta_idNaoLocalizado() {
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(10, null);
 
         ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);
@@ -70,7 +70,7 @@ public class SessaoVotacaoControllerTest {
     }
 
     @Test
-    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_400() throws Exception {
+    public void deveraCadastrarUmaSessaoVotacao_quandoRetornaErro_400_quandoPauta_null() throws Exception {
         SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO = new SessaoVotacaoAbrirDTO(null, null);
 
         ResponseEntity<SessaoVotacaoAndamentoDTO> responseEntity = restTemplate.postForEntity(url.concat("/abrir-sessao"), sessaoVotacaoAbrirDTO, SessaoVotacaoAndamentoDTO.class);

@@ -29,6 +29,15 @@ public class PautaService {
         return PautaDTO.toDTO(repository.save(PautaDTO.toEntity(dto)));
     }
 
+
+    /**
+     * Realiza a busca pela pauta de votacao.
+     * Se nao encontrado retorna httpStatus 404 direto para o client da API.
+     * Se encontrado faz a conversao para DTO
+     *
+     * @param oid - @{@link Pauta} ID
+     * @return - @{@link PautaDTO}
+     */
     @Transactional(readOnly = true)
     public PautaDTO buscarPautaPeloOID(Integer oid) {
         Optional<Pauta> pautaOptional = repository.findById(oid);
@@ -41,6 +50,13 @@ public class PautaService {
         return PautaDTO.toDTO(pautaOptional.get());
     }
 
+    /**
+     * Valida se a pauta existe na base de dados.
+     * Se existir  é considerada valida para votacao.
+     *
+     * @param oid - @{@link Pauta} ID
+     * @return - boolean
+     */
     @Transactional(readOnly = true)
     public boolean isPautaValida(Integer oid) {
         return repository.existsByOid(oid);

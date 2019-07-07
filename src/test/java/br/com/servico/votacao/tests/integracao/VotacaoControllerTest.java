@@ -2,6 +2,7 @@ package br.com.servico.votacao.tests.integracao;
 
 import br.com.servico.votacao.dto.ResultadoDTO;
 import br.com.servico.votacao.dto.VotarDTO;
+import br.com.servico.votacao.entity.Associado;
 import br.com.servico.votacao.entity.Pauta;
 import br.com.servico.votacao.entity.SessaoVotacao;
 import br.com.servico.votacao.entity.Votacao;
@@ -79,13 +80,15 @@ public class VotacaoControllerTest {
         repository.save(new Votacao(null, Boolean.FALSE, pauta.getOid(), sessaoVotacao.getOid()));
         repository.save(new Votacao(null, Boolean.FALSE, pauta.getOid(), sessaoVotacao.getOid()));
 
+        sessaoVotacao = new SessaoVotacao(sessaoVotacao.getOid(), sessaoVotacao.getDataHoraInicio(), sessaoVotacao.getDataHoraFim(), Boolean.FALSE);
+        this.sessaoVotacaoRepository.save(sessaoVotacao);
+
         ResponseEntity<ResultadoDTO> responseEntity = restTemplate.getForEntity(url.concat("/resultado/{oidPauta}/{oidSessaoVotacao}"),
                 ResultadoDTO.class,
                 pauta.getOid(),
                 sessaoVotacao.getOid());
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().getPautaDTO().getOid()).isEqualTo(pauta.getOid());
         assertThat(responseEntity.getBody().getVotacaoDTO().getOidSessaoVotacao()).isEqualTo(sessaoVotacao.getOid());
         assertThat(responseEntity.getBody().getVotacaoDTO().getQuantidadeVotosSim()).isEqualTo(4);
         assertThat(responseEntity.getBody().getVotacaoDTO().getQuantidadeVotosNao()).isEqualTo(3);
@@ -114,7 +117,30 @@ public class VotacaoControllerTest {
     }
 
     @Test
-    public void deveraRealizarVoto_quandoRetornaErro_sessaoInvalida() {
+    public void deveraRealizarVoto_quandoRetornaErro_sessaoEncerrada() {
+
+        this.pautaRepository.deleteAll();
+        this.sessaoVotacaoRepository.deleteAll();
+        this.associadoRepository.deleteAll();
+
+        Pauta pauta = new Pauta(null, "Teste Pauta 1");
+        pauta = this.pautaRepository.save(pauta);
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(null, LocalDateTime.now(), LocalDateTime.now(), Boolean.FALSE);
+        sessaoVotacao = this.sessaoVotacaoRepository.save(sessaoVotacao);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
+                new VotarDTO(pauta.getOid(),
+                        sessaoVotacao.getOid(),
+                        Boolean.TRUE,
+                        "47819429038"),
+                String.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.LOCKED);
+    }
+
+    @Test
+    public void deveraRealizarVoto_quandoRetornaErro_400_quandoAssociado_votouNovamente() {
 
         this.pautaRepository.deleteAll();
         this.sessaoVotacaoRepository.deleteAll();
@@ -126,12 +152,17 @@ public class VotacaoControllerTest {
         SessaoVotacao sessaoVotacao = new SessaoVotacao(null, LocalDateTime.now(), LocalDateTime.now().plusMinutes(1), Boolean.TRUE);
         sessaoVotacao = this.sessaoVotacaoRepository.save(sessaoVotacao);
 
+        Associado associado = new Associado(null, "47819429038", pauta.getOid());
+        associadoRepository.save(associado);
+
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url.concat("/votar"),
                 new VotarDTO(pauta.getOid(),
                         sessaoVotacao.getOid(),
-                        Boolean.TRUE, "47819429038"),
+                        Boolean.TRUE,
+                        "47819429038"),
                 String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isEqualTo("Associado tentou votar mais de 1 vez oidAssociado " + associado.getCpfAssociado());
     }
 }

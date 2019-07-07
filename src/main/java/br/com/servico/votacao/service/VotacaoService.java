@@ -29,8 +29,15 @@ public class VotacaoService {
         this.associadoService = associadoService;
     }
 
+    /**
+     * metodo responsavel por realizar as validacoes antes do voto ser computado
+     * e persistido na base de dados
+     *
+     * @param dto - @{@link VotarDTO}
+     * @return - boolean
+     */
     @Transactional(readOnly = true)
-    public Boolean isValidaVoto(VotarDTO dto) {
+    public boolean isValidaVoto(VotarDTO dto) {
         LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
@@ -57,6 +64,13 @@ public class VotacaoService {
         return Boolean.TRUE;
     }
 
+    /**
+     * Se os dados informados para o voto, forem considerados validos
+     * entao o voto é computado e persistido na base de dados.
+     *
+     * @param dto - @{@link VotarDTO}
+     * @return - String
+     */
     @Transactional
     public String votar(VotarDTO dto) {
         if (isValidaVoto(dto)) {
@@ -78,19 +92,36 @@ public class VotacaoService {
         return null;
     }
 
+    /**
+     * Apos voto ser computado. O associado e registrado na base de dados a fim de
+     * evitar que o mesmo possa votar novamente na mesma sessao de votacao e na mesma pauta.
+     * <p>
+     * A opcao de voto nao e persistido na base de dados.
+     *
+     * @param dto - @{@link VotarDTO}
+     */
     @Transactional
     public void registrarAssociadoVotou(VotarDTO dto) {
         AssociadoDTO associadoDTO = new AssociadoDTO(null, dto.getCpfAssociado(), dto.getOidPauta());
         associadoService.salvarAssociado(associadoDTO);
     }
 
+    /**
+     * @param dto - @{@link VotacaoDTO}
+     */
     @Transactional
     public void registrarVoto(VotacaoDTO dto) {
         LOGGER.debug("Salvando o voto para oidPauta {}", dto.getOidPauta());
         repository.save(VotacaoDTO.toEntity(dto));
     }
 
-
+    /**
+     * Realiza a busca e contagem dos votos positivos e negativos para determinada sessao e pauta de votacao.
+     *
+     * @param oidPauta         - @{@link br.com.servico.votacao.entity.Pauta} ID
+     * @param oidSessaoVotacao - @{@link br.com.servico.votacao.entity.SessaoVotacao} ID
+     * @return - @{@link VotacaoDTO}
+     */
     @Transactional(readOnly = true)
     public VotacaoDTO buscarResultadoVotacao(Integer oidPauta, Integer oidSessaoVotacao) {
         LOGGER.debug("Contabilizando os votos para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
@@ -105,11 +136,24 @@ public class VotacaoService {
         return dto;
     }
 
+    /**
+     * Realiza a montagem dos objetos referente ao resultado de determinada sessao e pauta de votacao.
+     * <p>
+     * Contagem somente e realizada apos a finalizacao da sessao.
+     *
+     * @param oidPauta         - @{@link br.com.servico.votacao.entity.Pauta} ID
+     * @param oidSessaoVotacao - @{@link br.com.servico.votacao.entity.SessaoVotacao} ID
+     * @return - @{@link ResultadoDTO}
+     */
     @Transactional(readOnly = true)
     public ResultadoDTO buscarDadosResultadoVotacao(Integer oidPauta, Integer oidSessaoVotacao) {
-        LOGGER.debug("Construindo o objeto de retorno do resultado para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
-        PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(oidPauta);
-        VotacaoDTO votacaoDTO = buscarResultadoVotacao(oidPauta, oidSessaoVotacao);
-        return new ResultadoDTO(pautaDTO, votacaoDTO);
+        if (sessaoVotacaoService.isSessaoValidaParaContagem(oidSessaoVotacao)) {
+            LOGGER.debug("Construindo o objeto de retorno do resultado para oidPauta = {}, oidSessaoVotacao = {}", oidPauta, oidSessaoVotacao);
+            PautaDTO pautaDTO = pautaService.buscarPautaPeloOID(oidPauta);
+            VotacaoDTO votacaoDTO = buscarResultadoVotacao(oidPauta, oidSessaoVotacao);
+            return new ResultadoDTO(pautaDTO, votacaoDTO);
+        }
+
+        throw new NotFoundException("Sessão de votação ainda está aberta, não é possível obter a contagem do resultado.");
     }
 }

@@ -15,7 +15,17 @@ public class ValidaCPFClient {
 
     private static final String ABLE_TO_VOTE = "ABLE_TO_VOTE";
 
-    public Boolean isVerificaAssociadoHabilitadoVotacao(String cpf) {
+    /**
+     * Faz consulta na API Client para validar pelo CPF, se o associado esta habilitado para votacao.
+     * <p>
+     * ABLE_TO_VOTE - Valido para votar
+     * <p>
+     * UNABLE_TO_VOTE - Invalido para votar
+     *
+     * @param cpf - @{@link br.com.servico.votacao.entity.Associado} CPF valido
+     * @return - boolea
+     */
+    public boolean isVerificaAssociadoHabilitadoVotacao(String cpf) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             String fooResourceUrl = "https://user-info.herokuapp.com/users/{cpf}";
