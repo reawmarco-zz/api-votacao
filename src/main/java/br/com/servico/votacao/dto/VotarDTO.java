@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -22,6 +24,7 @@ public class VotarDTO {
     @NotNull(message = "voto deve ser preenchido")
     private Boolean voto;
 
-    @NotNull(message = "cpf do associado deve ser preenchido")
+    @CPF(message = "Não é um CPF valido")
+    @NotBlank(message = "cpf do associado deve ser preenchido")
     private String cpfAssociado;
 }

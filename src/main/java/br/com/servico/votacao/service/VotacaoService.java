@@ -36,12 +36,11 @@ public class VotacaoService {
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
             LOGGER.error("Pauta nao localizada para votacao oidPauta {}", dto.getCpfAssociado());
             throw new NotFoundException("Pauta não localizada oid " + dto.getOidPauta());
-
         } else if (!sessaoVotacaoService.isSessaoVotacaoValida(dto.getOidSessaoVotacao())) {
             LOGGER.error("Tentativa de voto para sessao encerrada oidSessaoVotacao {}", dto.getOidSessaoVotacao());
             throw new SessoEncerradaException("Sessão de votação já encerrada");
 
-        } else if (associadoService.isAssociadoPodeVotar(dto.getCpfAssociado())) {
+        } else if (!associadoService.isAssociadoPodeVotar(dto.getCpfAssociado())) {
             LOGGER.error("Associado nao esta habilitado para votar {}", dto.getCpfAssociado());
             throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
         } else if (!associadoService.isValidaParticipacaoAssociadoVotacao(dto.getCpfAssociado(), dto.getOidPauta())) {
