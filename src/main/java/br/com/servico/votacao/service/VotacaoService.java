@@ -34,16 +34,22 @@ public class VotacaoService {
         LOGGER.debug("Validando os dados para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
         if (!pautaService.isPautaValida(dto.getOidPauta())) {
+
             LOGGER.error("Pauta nao localizada para votacao oidPauta {}", dto.getCpfAssociado());
             throw new NotFoundException("Pauta não localizada oid " + dto.getOidPauta());
+
         } else if (!sessaoVotacaoService.isSessaoVotacaoValida(dto.getOidSessaoVotacao())) {
+
             LOGGER.error("Tentativa de voto para sessao encerrada oidSessaoVotacao {}", dto.getOidSessaoVotacao());
             throw new SessoEncerradaException("Sessão de votação já encerrada");
 
         } else if (!associadoService.isAssociadoPodeVotar(dto.getCpfAssociado())) {
+
             LOGGER.error("Associado nao esta habilitado para votar {}", dto.getCpfAssociado());
             throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
+
         } else if (!associadoService.isValidaParticipacaoAssociadoVotacao(dto.getCpfAssociado(), dto.getOidPauta())) {
+
             LOGGER.error("Associado tentou votar mais de 1 vez oidAssociado {}", dto.getCpfAssociado());
             throw new VotoInvalidoException("Não é possível votar mais de 1 vez na mesma pauta");
         }
@@ -52,7 +58,7 @@ public class VotacaoService {
     }
 
     @Transactional
-    public VotacaoDTO votar(VotarDTO dto) {
+    public String votar(VotarDTO dto) {
         if (isValidaVoto(dto)) {
             LOGGER.debug("Dados validos para voto oidSessao = {}, oidPauta = {}, oidAssiciado = {}", dto.getOidSessaoVotacao(), dto.getOidPauta(), dto.getCpfAssociado());
 
@@ -63,11 +69,11 @@ public class VotacaoService {
                     null,
                     null);
 
-            votacaoDTO = registrarVoto(votacaoDTO);
+            registrarVoto(votacaoDTO);
 
             registrarAssociadoVotou(dto);
 
-            return votacaoDTO;
+            return "Voto validado";
         }
         return null;
     }
@@ -79,9 +85,9 @@ public class VotacaoService {
     }
 
     @Transactional
-    public VotacaoDTO registrarVoto(VotacaoDTO dto) {
+    public void registrarVoto(VotacaoDTO dto) {
         LOGGER.debug("Salvando o voto para oidPauta {}", dto.getOidPauta());
-        return VotacaoDTO.toDTO(repository.save(VotacaoDTO.toEntity(dto)));
+        repository.save(VotacaoDTO.toEntity(dto));
     }
 
 

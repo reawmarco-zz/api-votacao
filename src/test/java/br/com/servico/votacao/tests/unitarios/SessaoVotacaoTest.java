@@ -1,4 +1,4 @@
-package br.com.servico.votacao.testes;
+package br.com.servico.votacao.tests.unitarios;
 
 import br.com.servico.votacao.entity.SessaoVotacao;
 import br.com.servico.votacao.repository.SessaoVotacaoRepository;

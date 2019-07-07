@@ -28,9 +28,9 @@ public class VotacaoController {
     @PostMapping(value = "/votar")
     public ResponseEntity<?> votar(@Valid @RequestBody VotarDTO dto) {
         LOGGER.debug("Associado votando associado = {}", dto.getCpfAssociado());
-        service.votar(dto);
+        String mensagem = service.votar(dto);
         LOGGER.debug("Voto associado finalizado associado = {}", dto.getCpfAssociado());
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 
     @GetMapping(value = "/resultado/{oidPauta}/{oidSessaoVotacao}")

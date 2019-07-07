@@ -6,13 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PautaDTO {
 
+
     private Integer oid;
+
+    @NotBlank(message = "Descrição deve ser preenchido")
     private String descricao;
 
     public static final Pauta toEntity(PautaDTO dto) {

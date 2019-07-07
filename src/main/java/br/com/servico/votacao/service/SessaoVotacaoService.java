@@ -49,8 +49,12 @@ public class SessaoVotacaoService {
     }
 
     @Transactional(readOnly = true)
-    public void isValidaAbrirSessao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
-        pautaService.isPautaValida(sessaoVotacaoAbrirDTO.getOidPauta());
+    public Boolean isValidaAbrirSessao(SessaoVotacaoAbrirDTO sessaoVotacaoAbrirDTO) {
+        if (pautaService.isPautaValida(sessaoVotacaoAbrirDTO.getOidPauta())) {
+            return Boolean.TRUE;
+        } else {
+            throw new NotFoundException("Pauta não localizada oidPauta" + sessaoVotacaoAbrirDTO.getOidPauta());
+        }
     }
 
     @Transactional(readOnly = true)

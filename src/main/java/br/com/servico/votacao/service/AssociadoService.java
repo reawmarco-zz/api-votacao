@@ -26,13 +26,16 @@ public class AssociadoService {
     @Transactional(readOnly = true)
     public Boolean isValidaParticipacaoAssociadoVotacao(String cpfAssociado, Integer oidPauta) {
         LOGGER.debug("Validando participacao do associado na votacao da pauta  oid = {}", oidPauta);
-        return repository.existsByCpfAssociadoAndOidPauta(cpfAssociado, oidPauta);
+        if (repository.existsByCpfAssociadoAndOidPauta(cpfAssociado, oidPauta)) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     @Transactional
-    public AssociadoDTO salvarAssociado(AssociadoDTO dto) {
+    public void salvarAssociado(AssociadoDTO dto) {
         LOGGER.debug("Registrando participacao do associado na votacao oidAssociado = {}, oidPauta = {}", dto.getCpfAssociado(), dto.getOidPauta());
-        return AssociadoDTO.toDTO(repository.save(AssociadoDTO.toEntity(dto)));
+        repository.save(AssociadoDTO.toEntity(dto));
     }
 
     public Boolean isAssociadoPodeVotar(String cpf) {
